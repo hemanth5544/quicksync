@@ -1,0 +1,28 @@
+{
+  "name": "@quick-sync/logger",
+  "version": "1.0.0",
+  "description": "Shared logging utility using Winston for Quick Sync",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "logger",
+    "winston",
+    "logging",
+    "quick-sync"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "winston": "^3.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  }
+}
+
