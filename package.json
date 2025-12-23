@@ -1,0 +1,20 @@
+{
+  "name": "quick-sync-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@10.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "lint": "turbo lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.7.1"
+  }
+}
+
