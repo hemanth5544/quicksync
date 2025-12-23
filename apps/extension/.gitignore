@@ -1,0 +1,16 @@
+# Plasmo
+.plasmo
+build
+*.zip
+
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+
+# Logs
+*.log
+
+# OS
+.DS_Store
