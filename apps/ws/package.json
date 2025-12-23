@@ -1,0 +1,26 @@
+{
+  "name": "@quick-sync/ws-server",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "dev":   "ts-node-dev --respawn src/index.ts",
+    "lint":  "eslint 'src/**/*.{ts,js}'",
+    "test":  "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": ["webrtc","signaling","quick-sync"],
+  "license": "MIT",
+  "description": "WebSocket signaling server for Quick Sync",
+  "dependencies": {
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "@types/ws": "^8.5.4",
+    "eslint": "^9.25.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}
