@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="64" height="64" rx="12" fill="#F0F4F8"/>
+    <path d="M32 12C20.9543 12 12 20.9543 12 32C12 43.0457 20.9543 52 32 52C37.5228 52 42.5228 49.7614 46.1421 46.1421L39.0711 39.0711C37.1953 40.9468 34.6046 42 32 42C26.4772 42 22 37.5228 22 32C22 26.4772 26.4772 22 32 22C34.6046 22 37.1953 23.0532 39.0711 24.9289L46.1421 17.8579C42.5228 14.2386 37.5228 12 32 12Z" fill="url(#favicon_grad1)"/>
+    <path d="M52 32C52 20.9543 43.0457 12 32 12V22C37.5228 22 42 26.4772 42 32C42 37.5228 37.5228 42 32 42V52C43.0457 52 52 43.0457 52 32Z" fill="url(#favicon_grad2)"/>
+    <path d="M44.5 19.5L54.5 29.5H34.5L44.5 19.5Z" fill="#00E5FF"/>
+    <path d="M19.5 44.5L9.5 34.5H29.5L19.5 44.5Z" fill="#007BFF"/>
+    <defs>
+        <linearGradient id="favicon_grad1" x1="12" y1="32" x2="52" y2="32" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#007BFF"/>
+            <stop offset="1" stop-color="#00E5FF"/>
+        </linearGradient>
+        <linearGradient id="favicon_grad2" x1="32" y1="12" x2="32" y2="52" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#00E5FF"/>
+            <stop offset="1" stop-color="#007BFF"/>
+        </linearGradient>
+    </defs>
+</svg>
