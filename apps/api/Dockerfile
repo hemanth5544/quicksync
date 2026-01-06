@@ -1,25 +1,28 @@
+#Builder Stage
 FROM node:20-alpine AS builder
+
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.* .
+COPY . .
 
-COPY tsconfig.json ./
-COPY src ./src
-RUN npm run build   # assuming "build": "tsc" in package.json
+ENV PATH="/app/node_modules/.bin:/app/packages/logger/node_modules/.bin:/app/apps/api/node_modules/.bin:$PATH"
 
-FROM node:20-alpine AS runner
+RUN npm install
+RUN npm run build --workspace=@quick-sync/logger
+RUN npm run build --workspace=@quick-sync/session-api
+
+#Runtime
+
+FROM node:20-alpine
+
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci --production
-
-COPY --from=builder /app/dist ./dist
-
-ENV PORT=2000 \
-    HOST=0.0.0.0 \
-    CORS_ORIGIN=*
+COPY --from=builder /app/apps/api/package.json .
+COPY --from=builder /app/apps/api/dist/ /app/dist/
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/packages/logger /app/packages/logger
 
 EXPOSE 2000
 
-CMD ["node", "dist/index.js"]
+CMD ["npm","run","start"]
