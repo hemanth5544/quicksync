@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import { logger } from '@quick-sync/logger';
+import { getAPIConfig } from '@quick-sync/config';
 
-const MONGO_URI = process.env.MONGO_URI ?? 'mongodb://localhost:27017/session-api';
+const config = getAPIConfig();
+const MONGO_URI = config.mongoUri;
 
 async function connectToDb() {
   try {
