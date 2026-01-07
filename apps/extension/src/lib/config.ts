@@ -1,29 +1,22 @@
 import type { ExtensionConfig } from "@/types";
 
-// Default configuration - can be overridden via storage
-// Note: Socket.IO runs on the same port as the API server (2000)
-// The ws://localhost:3000 is for raw WebSocket (WebRTC signaling), not Socket.IO
+// Default configuration for browser extension
+// These can be overridden by user settings in chrome.storage
 const DEFAULT_CONFIG: ExtensionConfig = {
-  apiUrl: "http://localhost:2000",
-  wsUrl: "http://localhost:2000",
+  apiUrl: import.meta.env.VITE_API_URL || "http://localhost:2000",
+  wsUrl: import.meta.env.VITE_WS_URL || "http://localhost:3000",
   sessionStore: "Express",
   signaling: "WebSocket",
 };
 
 // Web app URL for session links
-const DEFAULT_WEB_APP_URL = "http://localhost:5173";
+const DEFAULT_WEB_APP_URL = import.meta.env.VITE_HOST_URL || "http://localhost:5173";
 
 export async function getConfig(): Promise<ExtensionConfig> {
   const result = await chrome.storage.sync.get("config");
   const config = result.config || DEFAULT_CONFIG;
   
-  // Validate and log the config
-  console.log("[Config] Loaded config:", {
-    apiUrl: config.apiUrl,
-    wsUrl: config.wsUrl,
-    sessionStore: config.sessionStore,
-    signaling: config.signaling,
-  });
+
   
   return config;
 }
