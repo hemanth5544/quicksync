@@ -14,13 +14,17 @@
   "license": "MIT",
   "description": "WebSocket signaling server for Quick Sync",
   "dependencies": {
+    "@quick-sync/config": "*",
+    "@quick-sync/logger": "*",
     "ws": "^8.18.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.25.0",
     "@types/node": "^22.14.1",
     "@types/ws": "^8.5.4",
     "eslint": "^9.25.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.30.1"
   }
 }
