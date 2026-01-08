@@ -1,11 +1,15 @@
 import WebSocket, {RawData, WebSocketServer} from 'ws';
 import {ExtendedWebSocket, IncomingMessage, SignalMessage} from "./types";
 import { logger } from '@quick-sync/logger';
+import { getWebSocketConfig } from '@quick-sync/config';
 
 const sessions = new Map<string, Map<string, ExtendedWebSocket>>();
 
-const PORT = Number(process.env.PORT_WS) || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
+const config = getWebSocketConfig();
+const PORT = config.port;
+const HOST = config.host;
+
+logger.info('Starting WebSocket server', { host: HOST, port: PORT });
 
 const wss = new WebSocketServer({ port: PORT, host: HOST });
 
