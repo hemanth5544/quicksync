@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Send, Smartphone, Plus, ExternalLink, Copy, QrCode, Trash2, Share2, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ export default function Popup() {
   const [qrOpen, setQrOpen] = useState(false);
   const [webAppUrl, setWebAppUrlState] = useState<string>("");
   const [lastMessageCount, setLastMessageCount] = useState(0);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { showToast, ToastContainer } = useToast();
 
   useEffect(() => {
@@ -74,9 +75,8 @@ export default function Popup() {
           sessionAPI.getMessages(currentSessionId),
         ]);
         setDevices(devicesData);
-        const initialMessages = messagesData.slice(-3);
-        setMessages(initialMessages);
-        setLastMessageCount(initialMessages.length);
+        setMessages(messagesData);
+        setLastMessageCount(messagesData.length);
 
         // Subscribe to updates
         socketManager.onDeviceUpdates((updatedDevices) => {
@@ -84,14 +84,24 @@ export default function Popup() {
         });
 
         socketManager.onMessageUpdates((updatedMessages) => {
-          const newMessages = updatedMessages.slice(-3);
           const previousCount = lastMessageCount;
-          setMessages(newMessages);
-          setLastMessageCount(newMessages.length);
+          console.log('[Popup] Received message updates:', updatedMessages.length, 'messages');
+          if (updatedMessages.length > 0) {
+            const latest = updatedMessages[updatedMessages.length - 1];
+            console.log('[Popup] Latest message:', {
+              id: latest.id,
+              type: latest.type,
+              hasText: !!latest.text,
+              text: latest.text,
+              sender: latest.sender
+            });
+          }
+          setMessages(updatedMessages);
+          setLastMessageCount(updatedMessages.length);
           
           // Show notification for new messages (not from this device)
-          if (newMessages.length > previousCount && currentDeviceId && newMessages.length > 0) {
-            const latestMessage = newMessages[newMessages.length - 1];
+          if (updatedMessages.length > previousCount && currentDeviceId && updatedMessages.length > 0) {
+            const latestMessage = updatedMessages[updatedMessages.length - 1];
             if (latestMessage.sender !== currentDeviceId) {
               chrome.notifications.create({
                 type: "basic",
@@ -116,6 +126,30 @@ export default function Popup() {
       socketManager.disconnect();
     };
   }, []);
+
+  // Auto-scroll to latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Poll for new messages periodically when popup is open
+  useEffect(() => {
+    if (!sessionId) return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const updatedMessages = await sessionAPI.getMessages(sessionId);
+        if (updatedMessages.length !== messages.length) {
+          setMessages(updatedMessages);
+          setLastMessageCount(updatedMessages.length);
+        }
+      } catch (err) {
+        console.error("Message polling error:", err);
+      }
+    }, 3000); // Poll every 3 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [sessionId, messages.length]);
 
   const handleSendMessage = useCallback(async () => {
     if (!messageInput.trim() || !sessionId || !deviceId || isSending) return;
@@ -367,27 +401,38 @@ export default function Popup() {
                 <div className="flex items-center gap-2">
                   <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-xs font-medium text-muted-foreground">
-                    Recent ({messages.length})
+                    Messages ({messages.length})
                   </span>
                 </div>
-                <div className="space-y-1.5 max-h-[280px] overflow-y-auto custom-scrollbar pr-1">
+                <div className="space-y-2 max-h-[280px] overflow-y-auto custom-scrollbar pr-1">
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`text-xs p-2 rounded-md ${
-                        msg.sender === deviceId
-                          ? "bg-primary/10 ml-2 border-l-2 border-primary"
-                          : "bg-muted/50 mr-2 border-l-2 border-muted-foreground/30"
+                      className={`flex ${
+                        msg.sender === deviceId ? "justify-end" : "justify-start"
                       }`}
                     >
-                      <div className="font-medium mb-0.5 text-[10px] text-muted-foreground">
-                        {msg.sender === deviceId ? "You" : "Other"}
-                      </div>
-                      <div className="text-foreground break-words line-clamp-2">
-                        {msg.text || msg.content || msg.filename || msg.fileName || "File"}
+                      <div
+                        className={`inline-block max-w-[85%] text-xs px-2.5 py-1.5 rounded-lg ${
+                          msg.sender === deviceId
+                            ? "bg-primary text-primary-foreground rounded-br-sm"
+                            : "bg-muted text-foreground rounded-bl-sm"
+                        }`}
+                      >
+                        <div className={`font-medium mb-0.5 text-[10px] ${
+                          msg.sender === deviceId ? "opacity-80" : "text-muted-foreground"
+                        }`}>
+                          {msg.sender === deviceId ? "You" : "Other"}
+                        </div>
+                        <div className="break-words whitespace-pre-wrap">
+                          {msg.type === "text" 
+                            ? (msg.text || msg.content || "[Empty message]")
+                            : (msg.filename || msg.fileName || "File")}
+                        </div>
                       </div>
                     </div>
                   ))}
+                  <div ref={messagesEndRef} />
                 </div>
               </div>
             )}
