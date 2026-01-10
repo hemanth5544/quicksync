@@ -68,6 +68,16 @@ export async function addMessage(
     return null;
   }
 
+  // Log the message to debug
+  logger.info('Adding message to session', { 
+    sessionId, 
+    messageId: message.id, 
+    type: message.type,
+    hasText: !!message.text,
+    textLength: message.text?.length || 0,
+    textPreview: message.text?.substring(0, 50)
+  });
+
   session.messages.push(message);
   await session.save();
 
