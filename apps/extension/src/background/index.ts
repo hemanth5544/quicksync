@@ -1,4 +1,5 @@
 import { sessionAPI } from "@/lib/api";
+import { socketManager } from "@/lib/socket";
 import { getStorageData, setStorageData } from "@/lib/storage";
 import { getDeviceId, getDeviceName } from "@/lib/deviceUtils";
 import type { Message } from "@/types";
@@ -154,7 +155,55 @@ chrome.storage.onChanged.addListener((changes) => {
       clipboardInterval = null;
     }
   }
+  
+  // Reconnect socket when session changes
+  if (changes.sessionId) {
+    const newSessionId = changes.sessionId.newValue;
+    if (newSessionId) {
+      initializeBackgroundSocket(newSessionId);
+    } else {
+      socketManager.disconnect();
+    }
+  }
 });
+
+// Keep socket connection alive in background
+async function initializeBackgroundSocket(sessionId?: string) {
+  try {
+    await sessionAPI.initialize();
+    
+    if (!sessionId) {
+      const storage = await getStorageData();
+      sessionId = storage.sessionId;
+    }
+    
+    if (sessionId) {
+      // Connect socket in background to keep it alive
+      await socketManager.connect(sessionId);
+      console.log("[Background] Socket connected for session:", sessionId);
+      
+      // Listen for message updates and send notifications
+      socketManager.onMessageUpdates(async (messages) => {
+        const storage = await getStorageData();
+        if (messages.length > 0 && storage.deviceId) {
+          const latestMessage = messages[messages.length - 1];
+          if (latestMessage.sender !== storage.deviceId) {
+            // Notify user of new message
+            chrome.notifications.create({
+              type: "basic",
+              iconUrl: chrome.runtime.getURL("assets/icon128.png"),
+              title: "Quick Sync - New Message",
+              message: latestMessage.text || latestMessage.content || "New message received",
+            });
+          }
+        }
+      });
+    }
+  } catch (error) {
+    console.error("[Background] Socket initialization error:", error);
+  }
+}
 
 // Initialize on startup
 initClipboardSync();
+initializeBackgroundSocket();
