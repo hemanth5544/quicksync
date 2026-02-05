@@ -14,7 +14,8 @@
   "license": "MIT",
   "description": "WebSocket signaling server for Quick Sync",
   "dependencies": {
-    "ws": "^8.18.1"
+    "ws": "^8.18.1",
+    "@quick-sync/logger": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
