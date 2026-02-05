@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextField, IconButton, InputAdornment, Stack, Paper, Snackbar, Alert } from "@mui/material";
+import {  TextField, IconButton, InputAdornment, Stack, Paper, Snackbar, Alert } from "@mui/material";
 import QRCode from "react-qr-code";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ShareIcon from "@mui/icons-material/Share";

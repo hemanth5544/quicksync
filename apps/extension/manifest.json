@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Sync",
+  "version": "1.0.0",
+  "description": "Share anything between your devices in seconds",
+  "permissions": [
+    "contextMenus",
+    "clipboardRead",
+    "clipboardWrite",
+    "notifications",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://localhost/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
+

@@ -1,0 +1,27 @@
+{
+  "name": "@quick-sync/config",
+  "version": "1.0.0",
+  "description": "Shared configuration utility for Quick Sync",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "config",
+    "environment",
+    "quick-sync"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  }
+}

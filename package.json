@@ -7,11 +7,19 @@
     "apps/*",
     "packages/*"
   ],
+  "overrides": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0"
+  },
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
     "check-types": "turbo check-types",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "start": "npm run start --workspace=@quick-sync/web",
+    "start:api": "npm run start --workspace=@quick-sync/session-api",
+    "start:ws": "npm run start --workspace=@quick-sync/ws-server",
+    "install:all": "npm install && turbo build"
   },
   "devDependencies": {
     "turbo": "^2.7.1"

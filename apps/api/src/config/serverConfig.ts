@@ -1,3 +1,5 @@
+import { getAPIConfig, type APIConfig } from '@quick-sync/config';
+
 export interface ServerConfig {
   port: number;
   host: string;
@@ -8,10 +10,16 @@ export interface ServerConfig {
  * Gets server configuration from environment variables
  */
 export function getServerConfig(): ServerConfig {
+  const config = getAPIConfig();
   return {
-    port: parseInt(process.env.PORT_API || '2000', 10),
-    host: process.env.HOST || '0.0.0.0',
-    corsOrigin: process.env.CORS_ORIGIN || '*',
+    port: config.port,
+    host: config.host,
+    corsOrigin: config.corsOrigin,
   };
 }
+
+/**
+ * Export the full API config for MongoDB connection
+ */
+export { getAPIConfig };
 
