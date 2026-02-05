@@ -14,9 +14,8 @@
   "license": "MIT",
   "description": "WebSocket signaling server for Quick Sync",
   "dependencies": {
-    "@quick-sync/config": "*",
-    "@quick-sync/logger": "*",
-    "ws": "^8.18.1"
+    "ws": "^8.18.1",
+    "@quick-sync/logger": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

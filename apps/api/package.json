@@ -17,8 +17,7 @@
   "description": "Express+Socket.IO session storage API for Quick Sync",
   "license": "MIT",
   "dependencies": {
-    "@quick-sync/config": "*",
-    "@quick-sync/logger": "*",
+    "@quick-sync/logger": "workspace:*",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "mongoose": "^8.13.2",
